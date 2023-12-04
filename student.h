@@ -1,6 +1,6 @@
 #ifndef student
 #define student
-#include<iostream>
+#include <iostream>
 using namespace std;
 
 class student
