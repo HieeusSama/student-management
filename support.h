@@ -1,10 +1,8 @@
-#ifndef classlib
-#define classlib
+#ifndef support
+#define support
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <conio.h>
-#include <stdlib.h>
+#include <windows.h>
 
 using namespace std;
 
@@ -36,8 +34,17 @@ class account
         bool login()
         {
             int choice;
-            cout << "select a choice!\n1 : register\n2 : Login\n your choice: "; cin >> choice;
-            if (choice == 1){
+            try
+            {
+                cout << "select a choice!\n1 : register\n2 : Login\n your choice: "; cin >> choice;
+                throw choice;
+            }
+            catch (...)
+            {
+                cout<<"Vui long nhap lai !!!";
+            }
+            if (choice == 1)
+            {
                 string username, password;
 
                 cout<<"select a username: "; cin>>username;
@@ -68,4 +75,22 @@ class account
             }
         }
 };
+
+class student
+{
+    private:
+        int id;
+        string address, classroom, majors;
+    public:
+        
+};
+
+void gotoxy(int x, int y)
+{
+    static HANDLE h = NULL;  
+    if(!h)
+        h = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD c = { x, y };  
+    SetConsoleCursorPosition(h,c);
+}
 #endif
