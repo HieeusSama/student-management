@@ -99,37 +99,63 @@ void gotoxy(short ix, short iy)
   SetConsoleCursorPosition(h,c);
 }
 
-void box(int x, int y, int w, int h)
+void ShowCur(bool CursorVisibility)
+{
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO cursor = { 1, CursorVisibility };
+	SetConsoleCursorInfo(handle, &cursor);
+}
+
+void box(int x, int y, int w, int h, int text_color, int background_color, string note)
 {
     if(h <= 1 || w <= 1)
         return;
+
     for(int i = x; i <= x + w; i++)
     {
-        gotoxy(i, y);
-        cout << char(4);
-        gotoxy(i, y + h);
-        cout << char(4);
+        gotoxy(i, y); cout << char(196);
+        gotoxy(i, y + h); cout << char(196);
     }
+
     for(int i = y; i <= y + h; i++)
     {
-        gotoxy(x, i);
-        cout << char(4);
-        gotoxy(x + w, i);
-        cout << char(4);
+        gotoxy(x, i); cout << char(179);
+        gotoxy(x + w, i); cout << char(179);
     }
+
+    gotoxy(x,y); cout << char(218);
+    gotoxy(x + w, y); cout << char(191);
+    gotoxy(x, y + h); cout << char(192);
+    gotoxy(x + w, y + h); cout << char(217);
+    gotoxy(x + w/2 - note.length()/2, y + 1); cout << note;
+}
+
+void control(int x, int y, int w, int h)
+{
+    gotoxy(x + w/2, y + 1);
+    while(true)
+    {
+        if(GetAsyncKeyState(VK_DOWN))
+        {
+            gotoxy(x + w/2, y + 4);
+        }
+        else if(GetAsyncKeyState(VK_UP))
+        {
+            gotoxy(x + w/2, y + 1);
+        }
+        else if(GetAsyncKeyState(VK_LSHIFT))
+        {
+            break;
+        }
+    }
+    
 }
 
 void title()
 {
     string x = "QUAN LY SINH VIEN";
-    string y = "Login";
-    string z = "Register";
     gotoxy(60 - x.length()/2,2);
     cout << x;
-    gotoxy(60 - y.length()/2,4);
-    cout << y;
-    gotoxy(60 - z.length()/2,7);
-    cout << z;
 }
 
 #endif
