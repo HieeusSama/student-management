@@ -7,6 +7,73 @@
 #include <conio.h>
 using namespace std;
 
+//Function
+void gotoxy(short ix, short iy)
+{
+  static HANDLE h = NULL;  
+  if(!h)
+    h = GetStdHandle(STD_OUTPUT_HANDLE);
+  COORD c = {ix, iy};
+  SetConsoleCursorPosition(h,c);
+}
+
+void box(int x, int y, int w, int h, string note)
+{
+    if(h <= 1 || w <= 1)
+        return;
+
+    for(int i = x; i <= x + w; i++)
+    {
+        gotoxy(i, y); cout << char(196);
+        gotoxy(i, y + h); cout << char(196);
+    }
+
+    for(int i = y; i <= y + h; i++)
+    {
+        gotoxy(x, i); cout << char(179);
+        gotoxy(x + w, i); cout << char(179);
+    }
+
+    gotoxy(x,y); cout << char(218);
+    gotoxy(x + w, y); cout << char(191);
+    gotoxy(x, y + h); cout << char(192);
+    gotoxy(x + w, y + h); cout << char(217);
+    gotoxy(x + w/2 - note.length()/2, y + 1); cout << note;
+}
+
+bool control(int x, int y, int w, int h)
+{
+    gotoxy(x + w - 1, y + 1);
+    while(true)
+    {
+        char input;
+        input = _getch();
+        if(GetAsyncKeyState(VK_DOWN))
+        {
+            gotoxy(x + w - 2, y + 4);
+        }
+        else if(GetAsyncKeyState(VK_UP))
+        {
+            gotoxy(x + w - 2, y + 1);
+        }
+        if(static_cast<int>(input) == 13)
+        {
+            break;
+            
+        }
+    }
+    
+}
+
+void title()
+{
+    string x = "QUAN LY SINH VIEN";
+    gotoxy(60 - x.length()/2,2);
+    cout << x;
+    box(50, 3, 20, 2, "Login");
+    box(50, 6, 20, 2, "Register");
+}
+
 //Class
 class account
 {
@@ -37,18 +104,11 @@ class account
         //Ham dang nhap
         bool login()
         {
+            title();
+            control(50, 3, 20, 2);
             int choice;
-            try
-            {
-                cout << endl;
-                cout << "select !\n1 : register\n2 : Login\n your choice: "; cin >> choice;
-                throw choice;
-            }
-            catch (...)
-            {
-                cout << "Vui long nhap lai !!!";
-            }
-            if (choice == 1)
+            cin >> choice;
+            if (choice == 4)
             {
                 string username, password;
 
@@ -59,10 +119,10 @@ class account
                 file.open(username + ".txt");
                 file << username << endl << password;
                 file.close();
-                
+
                 login();
             }
-            else if (choice == 2)
+            else if (choice == 6)
             {
                 bool status = check();
                 if(!status)
@@ -88,74 +148,5 @@ class student
         string address, classroom, majors;
     public:
 };
-
-//Function
-void gotoxy(short ix, short iy)
-{
-  static HANDLE h = NULL;  
-  if(!h)
-    h = GetStdHandle(STD_OUTPUT_HANDLE);
-  COORD c = {ix, iy};
-  SetConsoleCursorPosition(h,c);
-}
-
-void ShowCur(bool CursorVisibility)
-{
-	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	CONSOLE_CURSOR_INFO cursor = { 1, CursorVisibility };
-	SetConsoleCursorInfo(handle, &cursor);
-}
-
-void box(int x, int y, int w, int h, int text_color, int background_color, string note)
-{
-    if(h <= 1 || w <= 1)
-        return;
-
-    for(int i = x; i <= x + w; i++)
-    {
-        gotoxy(i, y); cout << char(196);
-        gotoxy(i, y + h); cout << char(196);
-    }
-
-    for(int i = y; i <= y + h; i++)
-    {
-        gotoxy(x, i); cout << char(179);
-        gotoxy(x + w, i); cout << char(179);
-    }
-
-    gotoxy(x,y); cout << char(218);
-    gotoxy(x + w, y); cout << char(191);
-    gotoxy(x, y + h); cout << char(192);
-    gotoxy(x + w, y + h); cout << char(217);
-    gotoxy(x + w/2 - note.length()/2, y + 1); cout << note;
-}
-
-void control(int x, int y, int w, int h)
-{
-    gotoxy(x + w/2, y + 1);
-    while(true)
-    {
-        if(GetAsyncKeyState(VK_DOWN))
-        {
-            gotoxy(x + w/2, y + 4);
-        }
-        else if(GetAsyncKeyState(VK_UP))
-        {
-            gotoxy(x + w/2, y + 1);
-        }
-        else if(GetAsyncKeyState(VK_LSHIFT))
-        {
-            break;
-        }
-    }
-    
-}
-
-void title()
-{
-    string x = "QUAN LY SINH VIEN";
-    gotoxy(60 - x.length()/2,2);
-    cout << x;
-}
 
 #endif
