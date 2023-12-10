@@ -17,7 +17,7 @@ void gotoxy(short ix, short iy)
   SetConsoleCursorPosition(h,c);
 }
 
-void box(int x, int y, int w, int h, string note)
+void box(int x, int y, int w, int h,int type, string note)
 {
     if(h <= 1 || w <= 1)
         return;
@@ -38,12 +38,20 @@ void box(int x, int y, int w, int h, string note)
     gotoxy(x + w, y); cout << char(191);
     gotoxy(x, y + h); cout << char(192);
     gotoxy(x + w, y + h); cout << char(217);
-    gotoxy(x + w/2 - note.length()/2, y + 1); cout << note;
+    if(type == 0)
+    {
+        gotoxy(x + w/2 - note.length()/2, y + 1); cout << note;
+    }
+    else if(type == 1)
+    {
+        gotoxy(x + 1, y + 1); cout << note;
+    }
 }
 
 bool control(int x, int y, int w, int h)
 {
-    gotoxy(x + w - 1, y + 1);
+    gotoxy(x + w - 2, y + 1);
+    int i = 1;
     while(true)
     {
         char input;
@@ -51,27 +59,27 @@ bool control(int x, int y, int w, int h)
         if(GetAsyncKeyState(VK_DOWN))
         {
             gotoxy(x + w - 2, y + 4);
+            i = 0;
         }
         else if(GetAsyncKeyState(VK_UP))
         {
             gotoxy(x + w - 2, y + 1);
+            i = 1;
         }
-        if(static_cast<int>(input) == 13)
+        else if(static_cast<int>(input) == 13)
         {
-            break;
-            
+            return i;
         }
     }
-    
 }
 
-void title()
+void menu()
 {
     string x = "QUAN LY SINH VIEN";
     gotoxy(60 - x.length()/2,2);
     cout << x;
-    box(50, 3, 20, 2, "Login");
-    box(50, 6, 20, 2, "Register");
+    box(50, 3, 20, 2, 0, "Login");
+    box(50, 6, 20, 2, 0, "Register");
 }
 
 //Class
@@ -84,8 +92,14 @@ class account
         //Ham kiem tra tai khoan
         bool check()
         {
-            cout << "enter username: "; cin >> username;
-            cout << "enter password: "; cin >> password;
+            string username, password;
+            string x = "Login";
+            gotoxy(60 - x.length()/2,2);
+            cout << x;
+            box(50, 6, 20, 2, 1, "Password: ");
+            box(50, 3, 20, 2, 1, "Username: ");
+            cin >> username;
+            gotoxy(61, 7); cin >> password;
 
             ifstream read(username + ".txt");
             getline(read, user);
@@ -104,27 +118,32 @@ class account
         //Ham dang nhap
         bool login()
         {
-            title();
-            control(50, 3, 20, 2);
-            int choice;
-            cin >> choice;
-            if (choice == 4)
+            menu();
+            if(control(50, 3, 20, 2) == 0)
             {
+                system("cls");
                 string username, password;
-
-                cout << "select a username: "; cin >> username;
-                cout << "select a password: "; cin >> password;
+                string x = "Register";
+                gotoxy(60 - x.length()/2,2);
+                cout << x;
+                box(50, 6, 20, 2, 1, "Password: ");
+                box(50, 3, 20, 2, 1, "Username: ");
+                cin >> username;
+                gotoxy(61, 7); cin >> password;
 
                 ofstream file;
                 file.open(username + ".txt");
                 file << username << endl << password;
                 file.close();
 
+                system("cls");
                 login();
             }
-            else if (choice == 6)
+            else if(control(50, 3, 20, 2) == 1)
             {
+                system("cls");
                 bool status = check();
+                system("cls");
                 if(!status)
                 {
                     cout << "incorrect information, try again!" << endl;
@@ -134,6 +153,7 @@ class account
                 else
                 {
                     cout << "login successful!" << endl;
+                    _getch();
                     system("cls");
                     return 1;
                 }
