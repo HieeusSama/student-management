@@ -82,6 +82,16 @@ void menu()
     box(50, 6, 20, 2, 0, "Register");
 }
 
+void menu_in()
+{
+    system("cls");
+    gotoxy(5, 3); cout << "Xin chao ";
+    box(5, 4, 15, 2, 0, "Them");
+    box(24, 4, 15, 2, 0, "Chinh sua");
+    gotoxy(19, 5);
+    _getch();
+}
+
 //Class
 class account
 {
@@ -147,15 +157,15 @@ class account
                 if(!status)
                 {
                     cout << "incorrect information, try again!" << endl;
-                    system("pause");
-                    return 0;
+                    _getch();
+                    system("cls");
+                    login();
                 }
                 else
                 {
                     cout << "login successful!" << endl;
                     _getch();
-                    system("cls");
-                    return 1;
+                    menu_in();
                 }
             }
         }
@@ -166,6 +176,7 @@ class student
     private:
         int id;
         string address, classroom, majors;
+        
     public:
 };
 
