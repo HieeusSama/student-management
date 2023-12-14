@@ -2,6 +2,7 @@
 
 int main()
 {
-    account student;
-    student.login();
+    student teacher;
+    teacher.login();
+    teacher.import();
 }

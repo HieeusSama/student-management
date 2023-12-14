@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <string>
 #include <conio.h>
+#include <iomanip>
 using namespace std;
 
 //Function
@@ -48,50 +49,6 @@ void box(int x, int y, int w, int h,int type, string note)
     }
 }
 
-bool control(int x, int y, int w, int h)
-{
-    gotoxy(x + w - 2, y + 1);
-    int i = 1;
-    while(true)
-    {
-        char input;
-        input = _getch();
-        if(GetAsyncKeyState(VK_DOWN))
-        {
-            gotoxy(x + w - 2, y + 4);
-            i = 0;
-        }
-        else if(GetAsyncKeyState(VK_UP))
-        {
-            gotoxy(x + w - 2, y + 1);
-            i = 1;
-        }
-        else if(static_cast<int>(input) == 13)
-        {
-            return i;
-        }
-    }
-}
-
-void menu()
-{
-    string x = "QUAN LY SINH VIEN";
-    gotoxy(60 - x.length()/2,2);
-    cout << x;
-    box(50, 3, 20, 2, 0, "Login");
-    box(50, 6, 20, 2, 0, "Register");
-}
-
-void menu_in()
-{
-    system("cls");
-    gotoxy(5, 3); cout << "Xin chao ";
-    box(5, 4, 15, 2, 0, "Them");
-    box(24, 4, 15, 2, 0, "Chinh sua");
-    gotoxy(19, 5);
-    _getch();
-}
-
 //Class
 class account
 {
@@ -99,6 +56,40 @@ class account
         string username, password, user, pass;
 
     public:
+        int control(int x, int y, int w, int h)
+        {
+            gotoxy(x + w - 2, y + 1);
+            int i = 1;
+            while(true)
+            {
+                char input;
+                input = _getch();
+                if(GetAsyncKeyState(VK_DOWN))
+                {
+                    gotoxy(x + w - 2, y + 4);
+                    i = 0;
+                }
+                else if(GetAsyncKeyState(VK_UP))
+                {
+                    gotoxy(x + w - 2, y + 1);
+                    i = 1;
+                }
+                else if(static_cast<int>(input) == 13)
+                {
+                    return i;
+                }
+            }
+        }
+
+        void menu()
+        {
+            string x = "QUAN LY SINH VIEN";
+            gotoxy(60 - x.length()/2,2);
+            cout << x;
+            box(50, 3, 20, 2, 0, "Login");
+            box(50, 6, 20, 2, 0, "Register");
+        }
+    
         //Ham kiem tra tai khoan
         bool check()
         {
@@ -111,7 +102,9 @@ class account
             cin >> username;
             gotoxy(61, 7); cin >> password;
 
-            ifstream read(username + ".txt");
+            string path = "E:/student-management/teacher/";
+            path += username;
+            ifstream read((path + ".txt").c_str());
             getline(read, user);
             getline(read, pass);
             
@@ -142,7 +135,9 @@ class account
                 gotoxy(61, 7); cin >> password;
 
                 ofstream file;
-                file.open(username + ".txt");
+                string path = "E:/student-management/teacher/";
+                path += username;
+                file.open((path + ".txt").c_str());
                 file << username << endl << password;
                 file.close();
 
@@ -165,19 +160,95 @@ class account
                 {
                     cout << "login successful!" << endl;
                     _getch();
-                    menu_in();
                 }
             }
         }
+
+        string getUsername()
+        {
+            return username;
+        }
+    };
+
+    class student : public account
+    {
+        private:
+            static int stt_start;
+            int stt;
+            int id, phone;
+            string name;
+            string class_of;
+        public:
+            student()
+            {
+                int stt = stt_start++;
+                int id, phone;
+                name = "Unknown";
+                class_of = "Unknown";
+            }
+
+            int control_in(int x, int y, int w, int h)
+            {
+                gotoxy(x + w - 2, y + 1);
+                int i = 1;
+                while(true)
+                {
+                    char input;
+                    input = _getch();
+                    if(GetAsyncKeyState(VK_LEFT))
+                    {
+                        gotoxy(x + w - 2, y + 1);
+                        i = 0;
+                    }
+                    else if(GetAsyncKeyState(VK_RIGHT))
+                    {
+                        gotoxy(x + 20 + w - 2, y + 1);
+                        i = 1;
+                    }
+                    else if(static_cast<int>(input) == 13)
+                    {
+                        return i;
+                    }
+                }
+            }
+
+            void menu_in()
+            {
+                account user;
+                system("cls");
+                gotoxy(5, 3); cout << "Xin chao ";
+                box(5, 4, 15, 2, 0, "Them");
+                box(25, 4, 15, 2, 0, "Chinh sua");
+                gotoxy(19, 5);
+            }
+
+            void import()
+            {
+                menu_in();
+                if(control_in(5, 4, 15, 2) == 0)
+                {
+                    system("cls");
+                    string x = "Them sinh vien";
+                    gotoxy(60 - x.length()/2,2);
+                    cout << x;
+                    box(50, 6, 20, 2, 1, "Ho va ten: ");
+                    box(50, 3, 20, 2, 1, "Ma sinh vien: ");
+                    cin >> id;
+                    gotoxy(61, 7); cin.ignore(); getline(cin,name);
+
+                    ofstream file;
+                    string path = "E:/student-management/student/";
+                    path += to_string(id);
+                    file.open((path + ".txt").c_str());
+                    file << id << endl << name;
+                    file.close();
+
+                    system("cls");
+                    menu_in();
+                }
+            }
 };
 
-class student
-{
-    private:
-        int id;
-        string address, classroom, majors;
-        
-    public:
-};
+int student::stt_start = 0;
 
 #endif
