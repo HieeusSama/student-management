@@ -236,6 +236,7 @@ class account
                     cin >> id;
                     gotoxy(61, 7); cin.ignore(); getline(cin,name);
 
+                    
                     ofstream file;
                     string path = "E:/student-management/student/";
                     path += to_string(id);
@@ -245,6 +246,28 @@ class account
 
                     system("cls");
                     menu_in();
+                    
+                }
+
+                else if (control_in(25, 4, 15, 2) == 0)
+                {
+                    system("cls");
+                    string x = "Chinh sua thong tin";
+                    gotoxy(60-x.length()/2,2);
+                    cout << x;
+
+                    ifstream infile;
+                    string path = "E:/student-management/student/"; 
+                    
+                    infile.open((path + ".txt").c_str());
+                    infile >> path; cout << path <<endl;
+
+                    infile.close();
+
+                    system("cls");
+                    menu_in();
+
+
                 }
             }
 };
