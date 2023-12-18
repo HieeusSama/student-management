@@ -178,6 +178,8 @@ class account
             int id, phone;
             string name;
             string class_of;
+            string dateOfBirth;
+            string address_of;
         public:
             student()
             {
@@ -185,6 +187,8 @@ class account
                 int id, phone;
                 name = "Unknown";
                 class_of = "Unknown";
+                dateOfBirth = "Unknown";
+                address_of = "Unknown";
             }
 
             int control_in(int x, int y, int w, int h)
@@ -231,46 +235,98 @@ class account
                     string x = "Them sinh vien";
                     gotoxy(60 - x.length()/2,2);
                     cout << x;
+
                     box(50, 6, 20, 2, 1, "Ho va ten: ");
+                    box(50, 9, 20, 2, 1, "Dia chi: ");
+                    box(50, 12, 20, 2, 1, "Ngay sinh: ");
+                    box(50, 15, 20, 2, 1, "So dien thoai: ");
                     box(50, 3, 20, 2, 1, "Ma sinh vien: ");
                     cin >> id;
                     gotoxy(61, 7); cin.ignore(); getline(cin,name);
-
+                    gotoxy(61, 10); getline(cin, address_of);
+                    gotoxy(61, 13); getline(cin, dateOfBirth);
+                    gotoxy(61, 16);
+                    cin >> phone;
                     
                     ofstream file;
                     string path = "E:/student-management/student/";
                     path += to_string(id);
                     file.open((path + ".txt").c_str());
-                    file << id << endl << name;
+                    file << id << endl << name << endl << address_of << endl << dateOfBirth << endl << phone;
                     file.close();
 
                     system("cls");
                     menu_in();
-                    
                 }
 
-                else if (control_in(25, 4, 15, 2) == 0)
+                //Chinh sua thong tin trong file
+                else if (control_in(5, 4, 15, 2) == 1) //sai
                 {
                     system("cls");
                     string x = "Chinh sua thong tin";
-                    gotoxy(60-x.length()/2,2);
+                    gotoxy(60 - x.length()/2,2);
                     cout << x;
 
+                    //check if the file exists
                     ifstream infile;
-                    string path = "E:/student-management/student/"; 
+                    string path = "E:/student-management/student/" + to_string(id) + ".txt";
+                    infile.open(path.c_str());
+                    if(infile)
+                    {
+                        //Hien thi thong tin hien tai
+                        
+                        gotoxy(50, 6); cout << "Ho va ten: "<< name; //phai co lenh ìf else check íd + "txt" == true 
+                        gotoxy(50, 3); cout << "Ma sinh vien: "<<id;
+                        gotoxy(50, 9); cout << "Dia chi: "<< address_of;
+                        gotoxy(50, 12); cout << "Ngay sinh: " << dateOfBirth;
+                        gotoxy(50, 15); cout << "So dien thoai: " << phone;
+                        infile >> id >> name >> address_of >> dateOfBirth >> phone;
+
+                        infile.close();
+
+                        //Cho phep thay doi thong tin moi
+                        int newId, newPhone;
+                        string newName, newClassOf, newAdress_of, newDateOfBirth;  
+
+                        box(50, 6, 20, 2, 1, "New Ho va ten: ");
+                        box(50, 9, 20, 2, 1, "New Dia chi: ");
+                        box(50, 12, 20, 2, 1, "New Ngay sinh: ");
+                        box(50, 15, 20, 2, 1, "New So dien thoai: ");
+                        box(50, 3, 20, 2, 1, "New Ma sinh vien: ");
+
+                        cin >> newId;
+                        gotoxy(61, 7);cin.ignore(); getline(cin, newName);
+                        gotoxy(61, 10); getline(cin, newAdress_of);
+                        gotoxy(61, 13); getline(cin, newDateOfBirth);
+                        gotoxy(61, 16); cin >> newPhone;
+
+                        //Luu thong tin moi sua
+                        ofstream file;
+                        string path = "E:/student-management/student/";
+                        path += to_string(id);
+                        file.open((path + ".txt").c_str());
+                        file << id << endl << name << endl << address_of << endl << dateOfBirth << endl << phone;
+                        file.close();
+
+                        cout << "Thong tin sinh vien da duoc cap nhat!" << endl;
+                        _getch();
+
+                        system("cls");
+                        menu_in();
+                    }
                     
-                    infile.open((path + ".txt").c_str());
-                    infile >> path; cout << path <<endl;
-
-                    infile.close();
-
-                    system("cls");
-                    menu_in();
-
+                    else
+                    {
+                        cout << "Sinh vien khong ton tai!" << endl;
+                        _getch();
+                        system("cls");
+                        menu_in();
+                    }
+                        
 
                 }
             }
-};
+    };
 
 int student::stt_start = 0;
 
