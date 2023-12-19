@@ -265,7 +265,7 @@ class account
             }
 
             //Kiem tra ma sinh vien
-            bool checkid(int id)
+            bool checkid(unsigned long int id)
             {
                 ifstream file;
                 string path = "E:/student-management/student/";
@@ -283,7 +283,7 @@ class account
                 }
             }
 
-            //Nhập
+            //Nhập thông tin sinh viên
             void import()
             {
                 menu_in();
@@ -328,8 +328,8 @@ class account
                     import();
                 }
 
-                //Chinh sua thong tin trong file
-                else if (control_in(5, 4, 15, 2) == 1) //sai
+                //Chinh sua thong tin cua sinh vien trong file
+                else if (control_in(5, 4, 15, 2) == 1) 
                 {
                     system("cls");
                     string x = "Chinh sua thong tin";
@@ -337,12 +337,12 @@ class account
                     cout << x << endl;
 
                     //Nhap ma sinh vien can chinh sua
-                    int id;
+                    unsigned long int id;
                     gotoxy(15, 4); cout << "Nhap ma sinh vien can chinh sua:";
                     box(50, 3, 30, 2, 1, " ");
                     cin>>id;
 
-                    //Kiem tra id can chinh sua
+                    //Kiem tra ma sinh vien can chinh sua
                     if(checkid(id))
                     {
 
@@ -380,9 +380,10 @@ class account
                         import();
                     }
                     
+                    //Khong tim thay ma sinh vien
                     else
-                    {//sua lai
-                        cout << "Sinh vien khong ton tai!" << endl;
+                    {
+                        gotoxy(50, 10); cout << "Sinh vien khong ton tai!" << endl;
                         _getch();
                         system("cls");
                         import();
@@ -391,16 +392,7 @@ class account
 
                 }
 
-                //In danh sach cac sinh vien
-
-                        /*
-
-                        gotoxy(50, 6); cout << "Ho va ten: "<< name; //phai co lenh ìf else check íd + "txt" == true 
-                        gotoxy(50, 3); cout << "Ma sinh vien: "<<id;
-                        gotoxy(50, 9); cout << "Dia chi: "<< address_of;
-                        gotoxy(50, 12); cout << "Ngay sinh: " << dateOfBirth;
-                        gotoxy(50, 15); cout << "So dien thoai: " << phone;
-                        */
+                
             }
 
             int getstt()
