@@ -6,6 +6,8 @@
 #include <string>
 #include <conio.h>
 #include <iomanip>
+#include <utility>
+#include <dirent.h>
 using namespace std;
 
 //Function
@@ -175,7 +177,7 @@ class account
         private:
             static int stt_start;
             int stt;
-            int id;
+            unsigned long int id;
             string phone;
             string name;
             string class_of;
@@ -185,7 +187,7 @@ class account
             student()
             {
                 int stt = stt_start++;
-                int id;
+                long int id;
                 name = "Unknown";
                 class_of = "Unknown";
                 dateOfBirth = "Unknown";
@@ -200,7 +202,7 @@ class account
                 while(true)
                 {
                     char input;
-                    input = _getch();
+                    input = getch();
                     if(GetAsyncKeyState(VK_LEFT))
                     {
                         gotoxy(x + w - 2, y + 1);
@@ -222,12 +224,46 @@ class account
             {
                 account user;
                 system("cls");
-                gotoxy(5, 3); cout << "Xin chao ";
+                gotoxy(5, 3); cout << "Xin chao " << getUsername();
                 box(5, 4, 15, 2, 0, "Them");
                 box(25, 4, 15, 2, 0, "Chinh sua");
-                box(45, 4, 20, 2, 0, "In danh sach");
                 gotoxy(50, 5);
+
+
+                //Hien thi danh sach sinh vien
+                string x = "Danh sach sinh vien";
+                gotoxy(60 - x.length() / 2, 8);
+                cout << x << endl;
+
+                string folderPath = "E:/student-management/student/";
+                DIR* directory = opendir(folderPath.c_str());
+                struct dirent* entry;
+                cout << endl;
+                string id, name, phone, address, dateOfBirth;
+                while ((entry = readdir(directory)) != nullptr) {
+                    string fileName = entry->d_name;
+                    if (fileName != "." && fileName != "..") 
+                    {
+                        string filePath = folderPath + "/" + fileName;
+                        fileName.erase(fileName.length() - 4);
+                        ifstream file(filePath);
+                        getline(file, id);
+                        getline(file, name);
+                        getline(file, address);
+                        getline(file, dateOfBirth);
+                        getline(file, phone);
+                        cout << id << setw(20) << char(179);
+                        cout << name << setw(20) << char(179);
+                        cout << address << setw(20) << char(179);
+                        cout << dateOfBirth << setw(20) << char(179);
+                        cout << phone << setw(20) << char(179);
+                        cout << endl;
+                        file.close();
+                    }
+                }
+                closedir(directory);
             }
+
             //Kiem tra ma sinh vien
             bool checkid(int id)
             {
@@ -243,12 +279,11 @@ class account
                 }
                 else
                 {
-                    file.close();
                     return false;
                 }
             }
 
-
+            //Nhập
             void import()
             {
                 menu_in();
@@ -274,11 +309,13 @@ class account
                     gotoxy(15, 4); cout << "Ma sinh vien: ";
                     box(50, 3, 30, 2, 1, " ");
                     cin >> id;
+                    stt;
                     gotoxy(52, 7); cin.ignore(); getline(cin,name);
                     gotoxy(52, 10); getline(cin, address_of);
                     gotoxy(52, 13); getline(cin, dateOfBirth);
                     gotoxy(52, 16); getline(cin, phone);
-                    
+
+                    pair<unsigned long int, int> mPair(id, stt);
                     
                     ofstream file;
                     string path = "E:/student-management/student/";
@@ -288,7 +325,7 @@ class account
                     file.close();
 
                     system("cls");
-                    menu_in();
+                    import();
                 }
 
                 //Chinh sua thong tin trong file
@@ -340,15 +377,15 @@ class account
                         cout << "Thong tin sinh vien da duoc cap nhat!" << endl;
                         _getch();
                         system("cls");
-                        menu_in();
+                        import();
                     }
                     
                     else
-                    {
+                    {//sua lai
                         cout << "Sinh vien khong ton tai!" << endl;
                         _getch();
                         system("cls");
-                        menu_in();
+                        import();
                     }
                         
 
@@ -364,7 +401,11 @@ class account
                         gotoxy(50, 12); cout << "Ngay sinh: " << dateOfBirth;
                         gotoxy(50, 15); cout << "So dien thoai: " << phone;
                         */
+            }
 
+            int getstt()
+            {
+                return stt;
             }
     };
 
