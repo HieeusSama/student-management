@@ -58,6 +58,7 @@ class account
         string username, password, user, pass;
 
     public:
+        //Tao chuc nang di chuyen con tro (len, xuong, Enter)
         int control(int x, int y, int w, int h)
         {
             gotoxy(x + w - 2, y + 1);
@@ -195,6 +196,7 @@ class account
                 phone = "Unknown";
             }
 
+            //Tao chuc nang di chuyen con tro (trai, phai, Enter)
             int control_in(int x, int y, int w, int h)
             {
                 gotoxy(x + w - 2, y + 1);
@@ -224,10 +226,12 @@ class account
             {
                 account user;
                 system("cls");
+                box(3, 2, 150, 22, 0, "");
                 gotoxy(5, 3); cout << "Xin chao " << getUsername();
                 box(5, 4, 15, 2, 0, "Them");
                 box(25, 4, 15, 2, 0, "Chinh sua");
-                gotoxy(50, 5);
+                box(135, 4, 15, 2, 0, "Tim kiem");
+                gotoxy(168, 5);
 
 
                 //Hien thi danh sach sinh vien
@@ -239,6 +243,7 @@ class account
                 DIR* directory = opendir(folderPath.c_str());
                 struct dirent* entry;
                 cout << endl;
+                
                 string id, name, phone, address, dateOfBirth;
                 while ((entry = readdir(directory)) != nullptr) {
                     string fileName = entry->d_name;
@@ -252,16 +257,18 @@ class account
                         getline(file, address);
                         getline(file, dateOfBirth);
                         getline(file, phone);
-                        cout << id << setw(20) << char(179);
-                        cout << name << setw(20) << char(179);
-                        cout << address << setw(20) << char(179);
-                        cout << dateOfBirth << setw(20) << char(179);
-                        cout << phone << setw(20) << char(179);
+                        cout << "   |   " << id << setw(15) << char(179);
+                        cout << name << setw(15) << char(179);
+                        cout << address << setw(15) << char(179);
+                        cout << dateOfBirth << setw(15) << char(179);
+                        cout << phone << setw(15) << char(179);
                         cout << endl;
                         file.close();
                     }
                 }
                 closedir(directory);
+
+                
             }
 
             //Kiem tra ma sinh vien
@@ -283,6 +290,41 @@ class account
                 }
             }
 
+            //Hien thi thong tin sinh vien can tim
+            void xuatThongTin(unsigned long int id)
+            {
+                system("cls");
+                ifstream file;
+                string path = "E:/student-management/student/";
+                path += to_string(id) + ".txt";
+                file.open(path.c_str());
+
+                if (file.is_open())
+                {
+                    
+                    
+                    getline(file, name);
+                    getline(file, address_of);
+                    getline(file, dateOfBirth);
+                    getline(file, phone);
+
+
+                    // Xuat thong tin sinh vien
+                    cout << id ;
+                    cout << name ;
+                    cout << address_of ;
+                    cout << dateOfBirth ;
+                    cout << phone << endl;
+
+                    file.close();
+                }
+
+                else
+                {
+                    cout << "Loi: Khong the mo file " << endl;
+                }
+            }
+
             //Nhập thông tin sinh viên
             void import()
             {
@@ -290,6 +332,7 @@ class account
                 if(control_in(5, 4, 15, 2) == 0)
                 {
                     system("cls");
+                    box(3, 2, 150, 22, 0, "");
                     string x = "Them sinh vien";
                     gotoxy(60 - x.length()/2,2);
                     cout << x;
@@ -332,6 +375,7 @@ class account
                 else if (control_in(5, 4, 15, 2) == 1) 
                 {
                     system("cls");
+                    box(3, 2, 150, 22, 0, "");
                     string x = "Chinh sua thong tin";
                     gotoxy(60 - x.length()/2,2);
                     cout << x << endl;
@@ -371,10 +415,10 @@ class account
                         string path = "E:/student-management/student/";
                         path += to_string(id);
                         file.open((path + ".txt").c_str());
-                        file << newName << endl << newAdress_of << endl << newDateOfBirth << endl << newPhone;
+                        file << id << endl << newName << endl << newAdress_of << endl << newDateOfBirth << endl << newPhone;
                         file.close();
 
-                        cout << "Thong tin sinh vien da duoc cap nhat!" << endl;
+                        gotoxy(15, 19); cout << "Thong tin sinh vien da duoc cap nhat!" << endl;
                         _getch();
                         system("cls");
                         import();
@@ -383,6 +427,7 @@ class account
                     //Khong tim thay ma sinh vien
                     else
                     {
+                        
                         gotoxy(50, 10); cout << "Sinh vien khong ton tai!" << endl;
                         _getch();
                         system("cls");
@@ -392,7 +437,32 @@ class account
 
                 }
 
-                
+                //Thong tin sinh vien da tim kiem
+                else if (control_in(5, 4, 15, 2) == 1)
+                {
+                    system("cls");
+                    gotoxy(168, 5);
+                    unsigned long int id;
+                    gotoxy(15, 4); cout << "Nhap ma sinh vien can tim: "; cin>>id;
+
+                    if(checkid(id))
+                    {
+                        xuatThongTin(id);
+                        _getch();
+                        system("cls");
+                        menu_in();
+                    }
+
+                    //Khong tim thay ma sinh vien
+                    else
+                    {
+                        gotoxy(50, 10); cout << "Sinh vien khong ton tai!" << endl;
+                        _getch();
+                        system("cls");
+                        menu_in();
+                    }
+                }
+
             }
 
             int getstt()
