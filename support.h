@@ -51,6 +51,23 @@ void box(int x, int y, int w, int h,int type, string note)
     }
 }
 
+void bg ()
+{
+    cout << setfill(char(196));
+    cout << setw(135) << char(196) << endl;
+    cout << setfill(' ');
+    cout << setw(55) << right << "DANH SACH SINH VIEN" << endl;
+    cout << setfill(char(196));
+    cout << setw(135) << char(196) << endl;
+    cout << setfill(' ');
+    cout << setw(20) << left << "Ma Nhan Vien" << setw(20) << left << "Ho Ten";
+    cout << setw(20) << left << "Dia Chi" << setw(20) << left << "Ngay sinh";
+    cout << setw(20) << left << "So Dien Thoai" << endl;
+    cout << setfill(char(196));
+    cout << setw(135) << char(196) << endl;
+    cout << setfill(' ');
+}
+
 //Class
 class account
 {
@@ -215,6 +232,11 @@ class account
                         gotoxy(x + 20 + w - 2, y + 1);
                         i = 1;
                     }
+                    else if(GetAsyncKeyState(VK_DOWN))
+                    {
+                        gotoxy(x + w + 124, y + 1);
+                        i = 2;
+                    }
                     else if(static_cast<int>(input) == 13)
                     {
                         return i;
@@ -226,23 +248,17 @@ class account
             {
                 account user;
                 system("cls");
-                box(3, 2, 150, 22, 0, "");
                 gotoxy(5, 3); cout << "Xin chao " << getUsername();
                 box(5, 4, 15, 2, 0, "Them");
                 box(25, 4, 15, 2, 0, "Chinh sua");
-                box(135, 4, 15, 2, 0, "Tim kiem");
-                gotoxy(168, 5);
+                box(115, 4, 30, 2, 1, "Tim kiem:");
+                gotoxy(0, 7);
 
-
-                //Hien thi danh sach sinh vien
-                string x = "Danh sach sinh vien";
-                gotoxy(60 - x.length() / 2, 8);
-                cout << x << endl;
-
+                bg();
+                gotoxy(0, 12);
                 string folderPath = "E:/student-management/student/";
                 DIR* directory = opendir(folderPath.c_str());
                 struct dirent* entry;
-                cout << endl;
                 
                 string id, name, phone, address, dateOfBirth;
                 while ((entry = readdir(directory)) != nullptr) {
@@ -257,12 +273,12 @@ class account
                         getline(file, address);
                         getline(file, dateOfBirth);
                         getline(file, phone);
-                        cout << "   |   " << id << setw(15) << char(179);
-                        cout << name << setw(15) << char(179);
-                        cout << address << setw(15) << char(179);
-                        cout << dateOfBirth << setw(15) << char(179);
-                        cout << phone << setw(15) << char(179);
-                        cout << endl;
+                        cout << setw(20) << left << id << setw(20) << left;
+                        cout << name << setw(20) << left;
+                        cout << address << setw(20) << left;
+                        cout << dateOfBirth << setw(20) << left;
+                        cout << phone << endl;
+                        
                         file.close();
                     }
                 }
@@ -291,31 +307,30 @@ class account
             }
 
             //Hien thi thong tin sinh vien can tim
-            void xuatThongTin(unsigned long int id)
+            void xuatThongTin(unsigned long int searchid)
             {
                 system("cls");
                 ifstream file;
                 string path = "E:/student-management/student/";
-                path += to_string(id) + ".txt";
+                path += to_string(searchid) + ".txt";
                 file.open(path.c_str());
-
+                string id, name, phone, address, dateOfBirth;
                 if (file.is_open())
                 {
                     
-                    
+                    getline(file, id);
                     getline(file, name);
-                    getline(file, address_of);
+                    getline(file, address);
                     getline(file, dateOfBirth);
                     getline(file, phone);
 
 
                     // Xuat thong tin sinh vien
-                    cout << id ;
-                    cout << name ;
-                    cout << address_of ;
-                    cout << dateOfBirth ;
+                    cout << setw(20) << left << id << setw(20) << left;
+                    cout << name << setw(20) << left;
+                    cout << address << setw(20) << left;
+                    cout << dateOfBirth << setw(20) << left;
                     cout << phone << endl;
-
                     file.close();
                 }
 
@@ -405,7 +420,7 @@ class account
                         gotoxy(15, 16); cout<<"So dien thoai: ";
                         box(50, 15, 30, 2, 1, "  ");
                         
-                        gotoxy(52, 7);cin.ignore(); getline(cin, newName);
+                        gotoxy(52, 7); cin.ignore(); getline(cin, newName);
                         gotoxy(52, 10); getline(cin, newAdress_of);
                         gotoxy(52, 13); getline(cin, newDateOfBirth);
                         gotoxy(52, 16); getline(cin, newPhone);
@@ -432,22 +447,19 @@ class account
                         _getch();
                         system("cls");
                         import();
-                    }
-                        
-
+                    }                      
                 }
-
                 //Thong tin sinh vien da tim kiem
-                else if (control_in(5, 4, 15, 2) == 1)
+                else if (control_in(5, 4, 15, 2) == 2)
                 {
-                    system("cls");
-                    gotoxy(168, 5);
-                    unsigned long int id;
-                    gotoxy(15, 4); cout << "Nhap ma sinh vien can tim: "; cin>>id;
+                    gotoxy(126, 5);
+                    unsigned long int searchid;
+                    cin >> searchid;
 
-                    if(checkid(id))
+                    if(checkid(searchid))
                     {
-                        xuatThongTin(id);
+                        
+                        xuatThongTin(searchid);
                         _getch();
                         system("cls");
                         menu_in();
@@ -456,6 +468,7 @@ class account
                     //Khong tim thay ma sinh vien
                     else
                     {
+                        system("cls");
                         gotoxy(50, 10); cout << "Sinh vien khong ton tai!" << endl;
                         _getch();
                         system("cls");
