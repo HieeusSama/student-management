@@ -213,7 +213,7 @@ class account
                 phone = "Unknown";
             }
 
-            //Tao chuc nang di chuyen con tro (trai, phai, Enter)
+            //Tao chuc nang di chuyen con tro (trai, phai,xuong, Enter)
             int control_in(int x, int y, int w, int h)
             {
                 gotoxy(x + w - 2, y + 1);
@@ -234,7 +234,7 @@ class account
                     }
                     else if(GetAsyncKeyState(VK_DOWN))
                     {
-                        gotoxy(x + w + 124, y + 1);
+                        gotoxy(x + w + 124 - 19, y + 1);
                         i = 2;
                     }
                     else if(static_cast<int>(input) == 13)
@@ -248,10 +248,10 @@ class account
             {
                 account user;
                 system("cls");
-                gotoxy(5, 3); cout << "Xin chao " << getUsername();
+                gotoxy(5, 3); cout << "Xin chao ";
                 box(5, 4, 15, 2, 0, "Them");
                 box(25, 4, 15, 2, 0, "Chinh sua");
-                box(115, 4, 30, 2, 1, "Tim kiem:");
+                box(115, 4, 19, 2, 1, "Tim kiem:");
                 gotoxy(0, 7);
 
                 bg();
@@ -315,9 +315,16 @@ class account
                 path += to_string(searchid) + ".txt";
                 file.open(path.c_str());
                 string id, name, phone, address, dateOfBirth;
+                system("cls");
+                gotoxy(5, 3); cout << "Xin chao ";
+                box(5, 4, 15, 2, 0, "Them");
+                box(25, 4, 15, 2, 0, "Chinh sua");
+                box(115, 4, 19, 2, 1, "Tim kiem:");
+                gotoxy(0, 7);
+                bg();
+                gotoxy(0, 12);
                 if (file.is_open())
                 {
-                    
                     getline(file, id);
                     getline(file, name);
                     getline(file, address);
@@ -462,7 +469,8 @@ class account
                         xuatThongTin(searchid);
                         _getch();
                         system("cls");
-                        menu_in();
+                        
+                        import();
                     }
 
                     //Khong tim thay ma sinh vien
@@ -472,7 +480,7 @@ class account
                         gotoxy(50, 10); cout << "Sinh vien khong ton tai!" << endl;
                         _getch();
                         system("cls");
-                        menu_in();
+                        import();
                     }
                 }
 
